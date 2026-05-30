@@ -822,6 +822,10 @@
 
 
 @media (max-width: 900px) {
+  .page {
+    overflow-x: clip;
+  }
+
   .layout {
     grid-template-columns: 1fr;
   }
@@ -832,12 +836,13 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 280px;
+    width: min(88vw, 340px);
     z-index: 200;
     background: #0a0a14;
     border-right: 1px solid rgba(255, 215, 0, 0.1);
-    padding-top: 1.5rem;
-    height: 100vh;
+    padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+    height: 100dvh;
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.45);
   }
 
   .sidebarOpen {
@@ -875,31 +880,161 @@
   }
 
   .hero {
-    padding: 2.5rem 1.25rem 1.75rem;
+    padding: 2rem 1rem 1.15rem;
+  }
+
+  .heroGlow {
+    top: -180px;
+    width: 420px;
+    height: 320px;
+  }
+
+  .heroEyebrow {
+    font-size: 0.68rem;
+    margin-bottom: 0.55rem;
   }
 
   .heroTitle {
-    font-size: 2rem;
+    font-size: clamp(2rem, 12vw, 2.65rem);
+    margin-bottom: 0.55rem;
+  }
+
+  .heroSub {
+    font-size: 0.93rem;
+    margin-bottom: 1.15rem;
   }
 
   .statsRow {
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 0.55rem 0.35rem;
+    border: 1px solid rgba(255, 215, 0, 0.07);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.018);
   }
 
   .statValue {
-    font-size: 1.25rem;
+    font-size: clamp(0.98rem, 4.6vw, 1.2rem);
+  }
+
+  .statLabel {
+    font-size: 0.55rem;
+    letter-spacing: 0.035em;
   }
 
   .controlsBar {
-    padding: 0.75rem 1rem;
+    top: var(--ifm-navbar-height, 56px);
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.65rem max(0.85rem, env(safe-area-inset-left, 0px)) 0.7rem max(0.85rem, env(safe-area-inset-right, 0px));
+    overflow: hidden;
+  }
+
+  .searchWrap {
+    max-width: none;
+  }
+
+  .searchInput {
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: 16px; /* Prevent iOS zoom-on-focus. */
+  }
+
+  .sourcePills {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    margin-inline: -0.85rem;
+    padding: 0 0.85rem 0.15rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sourcePills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .srcPill {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 0.42rem 0.72rem;
   }
 
   .main {
-    padding: 0.75rem 1rem 2rem;
+    padding: 0.65rem 0.85rem 2rem;
   }
 
   .grid {
     grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .card {
+    border-radius: 12px;
+    animation: none;
+  }
+
+  .card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .cardInner {
+    padding: 0.9rem 0.9rem 0.85rem 1rem;
+  }
+
+  .cardTitleGroup {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .sourcePill {
+    align-self: flex-start;
+    white-space: normal;
+  }
+
+  .cardTitle {
+    font-size: 0.98rem;
+  }
+
+  .cardDesc {
+    font-size: 0.86rem;
+    -webkit-line-clamp: 3;
+  }
+
+  .catButton,
+  .platformPill,
+  .tagPill {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .filterSummary {
+    align-items: flex-start;
+  }
+
+  .clearAllBtn {
+    margin-left: 0;
+    min-height: 30px;
+  }
+}
+
+@media (max-width: 420px) {
+  .statsRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero {
+    padding-top: 1.5rem;
   }
 }
 

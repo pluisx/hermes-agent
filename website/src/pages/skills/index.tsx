@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Layout from "@theme/Layout";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import styles from "./styles.module.css";
 
 interface Skill {
@@ -409,13 +410,6 @@ function StatCard({ value, label, color }: { value: number; label: string; color
 
 const PAGE_SIZE = 60;
 
-// Routes Docusaurus serves the static API JSON from. `baseUrl` is `/docs/`,
-// `static/api/` ends up at `/docs/api/`. Hardcoding here is fine because the
-// same `baseUrl` is enforced repo-wide; if it ever changes, this is the only
-// place that needs to follow.
-const SKILLS_URL = "/docs/api/skills.json";
-const META_URL = "/docs/api/skills-meta.json";
-
 function buildSearchHaystack(s: Skill): string {
   // Pre-compute the lowercase blob the search filter scans. Done once at
   // load time instead of per-keystroke per-skill. With 50k+ skills the
@@ -434,6 +428,9 @@ function buildSearchHaystack(s: Skill): string {
 }
 
 export default function SkillsDashboard() {
+  const skillsUrl = useBaseUrl("/api/skills.json");
+  const metaUrl = useBaseUrl("/api/skills-meta.json");
+
   // Lazy-loaded data. Was bundled into the JS chunk (~22 MB at 50k skills,
   // which made the initial page load unusable on mobile). Now fetched on
   // mount from the same CDN that serves the docs.
@@ -459,11 +456,11 @@ export default function SkillsDashboard() {
     (async () => {
       try {
         const [sk, mt] = await Promise.all([
-          fetch(SKILLS_URL).then((r) => {
+          fetch(skillsUrl).then((r) => {
             if (!r.ok) throw new Error(`skills.json HTTP ${r.status}`);
             return r.json();
           }),
-          fetch(META_URL).then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
+          fetch(metaUrl).then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
         ]);
         if (cancelled) return;
         const skillsArr = Array.isArray(sk) ? (sk as Skill[]) : [];
@@ -478,7 +475,7 @@ export default function SkillsDashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [skillsUrl, metaUrl]);
 
   // Debounce the search input — 150ms feels instant while preventing the
   // filter from running on every individual keystroke.
@@ -655,7 +652,7 @@ export default function SkillsDashboard() {
             <input
               ref={searchRef}
               type="text"
-              placeholder='Search skills... (press "/" to focus)'
+              placeholder="Search skills..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={styles.searchInput}
